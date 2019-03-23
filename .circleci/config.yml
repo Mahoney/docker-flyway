@@ -1,0 +1,35 @@
+# This is a depository for named blocks of yaml to be used elsewhere - the
+# equivalent of private methods
+named_config:
+
+  setup_git: &setup_git |
+    git config --global user.email "circleci@example.com"
+    git config --global user.name "Circle CI"
+
+  tag_commit_with_version: &tag_commit_with_version
+    command: /usr/local/bash_libs/tag-version.sh > .build_version
+
+  push_version_tagged_image_to_repo: &push_version_tagged_image_to_repo
+    command: |
+      version=$(< .build_version tr -d '^@')
+      echo "Pushing ${DOCKER_ARTIFACT}:latest to repo as version $version"
+      /usr/local/bash_libs/deploy-to-repo.sh "${DOCKER_ARTIFACT}:latest" $version
+
+version: 2
+jobs:
+  build:
+    working_directory: /home/circleci/docker-flyway
+    docker:
+      image: teviotia/circleci-docker-openjdk-node:1.45.0
+    environment:
+      DOCKER_REPO: teviotia
+      DOCKER_ARTIFACT: flyway
+    steps:
+      - checkout
+
+      - run: *setup_git
+      - run: *tag_commit_with_version
+
+      - run: ./do build
+
+      - deploy: *push_version_tagged_image_to_repo

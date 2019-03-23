@@ -1,2 +1,2 @@
-insert into foo (description) values ('foo');
-insert into bar (description) values ('bar');
+insert into foo (id, description) values (1, 'foo');
+insert into bar (id, description) values (2, 'bar');
