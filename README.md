@@ -1,6 +1,4 @@
-# Flyway docker image
-
-[![CircleCI](https://circleci.com/gh/Mahoney/docker-flyway/tree/master.svg?style=svg)](https://circleci.com/gh/Mahoney/docker-flyway/tree/master)
+# Flyway docker image [![CircleCI](https://circleci.com/gh/Mahoney/docker-flyway/tree/master.svg?style=svg)](https://circleci.com/gh/Mahoney/docker-flyway/tree/master)
 
 ## What is Flyway?
 
@@ -39,7 +37,7 @@ scripts in a volume under `/flyway/sql`.
 Assuming your DB is a PostgreSQL Database, running a schema migration is simple as this:  
 
 
-```
+```bash
 docker run --rm \
   -v ${PWD}:/flyway/sql 
   teviotia/flyway \
