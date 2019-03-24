@@ -13,6 +13,7 @@ named_config:
     command: |
       version=$(< .build_version tr -d '^@')
       echo "Pushing ${DOCKER_ARTIFACT}:latest to repo as version $version"
+      /usr/local/bash_libs/deploy-to-repo.sh "${DOCKER_ARTIFACT}:latest" "5.2.4"
       /usr/local/bash_libs/deploy-to-repo.sh "${DOCKER_ARTIFACT}:latest" "5.2.4-$version"
 
 version: 2
