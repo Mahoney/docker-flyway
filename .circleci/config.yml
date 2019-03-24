@@ -25,6 +25,7 @@ jobs:
       - DOCKER_REPO: teviotia
       - DOCKER_ARTIFACT: flyway
     steps:
+      - setup_remote_docker
       - checkout
       - run: *setup_git
       - run: *tag_commit_with_version
