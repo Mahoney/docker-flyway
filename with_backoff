@@ -5,9 +5,9 @@ IFS=$'\n\t'
 
 # Retries a command a with backoff.
 #
-# The retry count is given by ATTEMPTS (default 5), the
+# The retry count is given by ATTEMPTS (default 7), the
 # initial backoff timeout is given by TIMEOUT in seconds
-# (default 1.)
+# (default 1/8 of a second.)
 #
 # Successive backoffs double the timeout.
 #
@@ -18,10 +18,10 @@ function main {
   local attempt=0
   local exitCode=0
 
-  while (( ${attempt} < ${max_attempts} ))
+  while (( attempt < max_attempts ))
   do
     set +e
-    "$@"
+    eval "$@"
     exitCode=$?
     set -e
 
@@ -30,15 +30,16 @@ function main {
       break
     fi
 
-    echo "Failure! Retrying in $timeout.." 1>&2
-    sleep ${timeout}
+    echo "Failure! Retrying in $timeout seconds.." 1>&2
+    sleep "${timeout}"
     attempt=$(( attempt + 1 ))
-    timeout=$(echo ${timeout}*2 | bc)
+    timeout=$(echo "${timeout}"*2 | bc)
   done
 
   if [[ ${exitCode} != 0 ]]
   then
-    echo "Failed $attempt times, abandoning ($@)" 1>&2
+    local IFS=" "
+    echo "Failed $attempt times, abandoning ($*)" 1>&2
   fi
 
   return ${exitCode}
